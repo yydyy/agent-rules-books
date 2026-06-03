@@ -1,0 +1,11 @@
+{
+  "_comment": "AI 规则自动部署配置。修改 targetProjectPaths 为你的项目路径数组后，双击运行 setup-ai-rules.bat",
+  "sourceRepoPath": "d:\\Documents\\agent-rules-books",
+  "targetProjectPaths": [
+    "d:\\ProjectA",
+    "d:\\ProjectB"
+  ],
+  "aiTools": ["kimi", "claude"],
+  "defaultRule": "clean-code.mini.md",
+  "overwriteProjectFiles": true
+}
