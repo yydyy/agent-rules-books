@@ -22,7 +22,7 @@ if (-not (Test-Path $configPath)) {
     exit 1
 }
 
-$config = Get-Content -Raw $configPath | ConvertFrom-Json
+$config = Get-Content -Raw $configPath -Encoding UTF8 | ConvertFrom-Json
 $sourceRepo         = $config.sourceRepoPath
 $targetProjectPaths = $config.targetProjectPaths
 $aiTools            = $config.aiTools
@@ -35,10 +35,14 @@ if (-not $targetProjectPaths -or $targetProjectPaths.Count -eq 0) {
     exit 1
 }
 
-if (-not (Test-Path $sourceRepo)) {
-    Write-Host "[错误] 规则源仓库不存在: $sourceRepo" -ForegroundColor Red
-    Read-Host "按 Enter 退出"
-    exit 1
+# sourceRepoPath 如果不存在或为空，则使用当前脚本所在目录
+if (-not $sourceRepo -or -not (Test-Path $sourceRepo)) {
+    if ($sourceRepo) {
+        Write-Host "[警告] sourceRepoPath 不存在: $sourceRepo，回退为脚本所在目录" -ForegroundColor Yellow
+    } else {
+        Write-Host "[提示] sourceRepoPath 未配置，使用脚本所在目录作为源仓库" -ForegroundColor Yellow
+    }
+    $sourceRepo = $scriptDir
 }
 
 # ---------- 查找所有 mini.md ----------
@@ -111,7 +115,7 @@ $skillMeta = @{
 
 # ---------- 生成带 frontmatter 的 SKILL.md 内容 ----------
 function New-SkillContent($sourceFile, $meta) {
-    $original = Get-Content -Raw $sourceFile
+    $original = Get-Content -Raw $sourceFile -Encoding UTF8
     $frontmatter = "---`nname: $($meta.Name)`ndescription: $($meta.Description)`n---`n`n"
     return $frontmatter + $original
 }
@@ -197,15 +201,48 @@ foreach ($targetProject in $targetProjectPaths) {
 
     # ---------- 1. 注入默认规则到 AGENTS.md ----------
     $agentsMdPath = Join-Path $targetProject "AGENTS.md"
-    Copy-Item $defaultFile.FullName $agentsMdPath -Force
-    Write-Host "[OK] AGENTS.md 已注入默认规则: $defaultRule" -ForegroundColor Green
+    $defaultContent = Get-Content -Raw $defaultFile.FullName -Encoding UTF8
+    # 取 defaultRule 内容中第一行 "# " 开头的标题作为指纹，用于检测是否已包含
+    $fingerprint = ($defaultContent -split "`n" | Where-Object { $_ -match '^#\s+' } | Select-Object -First 1).Trim()
 
-    # ---------- 2. Claude Code: 创建 CLAUDE.md ----------
+    if (-not (Test-Path $agentsMdPath)) {
+        # 文件不存在，直接创建
+        Set-Content -Path $agentsMdPath -Value $defaultContent -Encoding UTF8
+        Write-Host "[OK] AGENTS.md 已创建，注入默认规则: $defaultRule" -ForegroundColor Green
+    } else {
+        # 文件已存在，检测是否已包含默认规则的核心内容（用标题指纹匹配）
+        $existingAgents = Get-Content -Raw $agentsMdPath -Encoding UTF8
+        if ($fingerprint -and $existingAgents -match [regex]::Escape($fingerprint)) {
+            Write-Host "[跳过] AGENTS.md 已包含默认规则内容，不处理" -ForegroundColor Yellow
+        } else {
+            # 内容不存在，追加到文件顶部
+            $newAgents = $defaultContent + "`n`n" + $existingAgents
+            Set-Content -Path $agentsMdPath -Value $newAgents -Encoding UTF8
+            Write-Host "[OK] AGENTS.md 已存在，默认规则已追加到顶部" -ForegroundColor Green
+        }
+    }
+
+    # ---------- 2. Claude Code: 创建/更新 CLAUDE.md ----------
     if ($aiTools -contains "claude") {
         $claudeMdPath = Join-Path $targetProject "CLAUDE.md"
         $claudeContent = "@AGENTS.md`n`n## Claude Code`n`n- Use skills for long procedures and checklists.`n- Use scoped rules for subsystem-specific guidance."
-        Set-Content -Path $claudeMdPath -Value $claudeContent -Encoding UTF8
-        Write-Host "[OK] CLAUDE.md 已创建 (引用 AGENTS.md)" -ForegroundColor Green
+
+        if (-not (Test-Path $claudeMdPath)) {
+            # 文件不存在，直接创建
+            Set-Content -Path $claudeMdPath -Value $claudeContent -Encoding UTF8
+            Write-Host "[OK] CLAUDE.md 已创建 (引用 AGENTS.md)" -ForegroundColor Green
+        } else {
+            # 文件已存在，检测是否已引用 AGENTS.md
+            $existingClaude = Get-Content -Raw $claudeMdPath -Encoding UTF8
+            if ($existingClaude -match '@AGENTS\.md') {
+                Write-Host "[跳过] CLAUDE.md 已包含 @AGENTS.md 引用，不处理" -ForegroundColor Yellow
+            } else {
+                # 不存在则追加到文件顶部
+                $newClaude = $claudeContent + "`n`n" + $existingClaude
+                Set-Content -Path $claudeMdPath -Value $newClaude -Encoding UTF8
+                Write-Host "[OK] CLAUDE.md 已存在，@AGENTS.md 引用已追加到顶部" -ForegroundColor Green
+            }
+        }
     }
 
     # ---------- 3. 部署项目级 Skills ----------
