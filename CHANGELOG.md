@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6 - 2026-06-04
+
+- Added `Mao Zedong Perspective` rule set based on the analytical and strategic frameworks distilled from the Selected Works of Mao Zedong.
+- Added full, `mini`, and `nano` releases for `mao-zedong-perspective`, plus workbench traceability and a canonical workbench `full.md` symlink.
+- Updated the README release matrix and Books List.
+
 ## v0.5 - 2026-05-04
 
 Commit: [`01d1fab`](https://github.com/ciembor/agent-rules-books/commit/01d1fab)

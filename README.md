@@ -56,6 +56,7 @@ Metrics:
 | [Domain-Driven Design](domain-driven-design/) | [full](domain-driven-design/domain-driven-design.md) | 979 | 523 | 42424 B | [mini](domain-driven-design/domain-driven-design.mini.md) | 48 | 30 | 5683 B | [nano](domain-driven-design/domain-driven-design.nano.md) | 39 | 21 | 2266 B |
 | [Domain-Driven Design Distilled](domain-driven-design-distilled/) | [full](domain-driven-design-distilled/domain-driven-design-distilled.md) | 317 | 158 | 11351 B | [mini](domain-driven-design-distilled/domain-driven-design-distilled.mini.md) | 56 | 38 | 6438 B | [nano](domain-driven-design-distilled/domain-driven-design-distilled.nano.md) | 41 | 23 | 2535 B |
 | [Implementing Domain-Driven Design](implementing-domain-driven-design/) | [full](implementing-domain-driven-design/implementing-domain-driven-design.md) | 337 | 177 | 12848 B | [mini](implementing-domain-driven-design/implementing-domain-driven-design.mini.md) | 57 | 39 | 7333 B | [nano](implementing-domain-driven-design/implementing-domain-driven-design.nano.md) | 37 | 19 | 2723 B |
+| [Mao Zedong Perspective](mao-zedong-perspective/) | [full](mao-zedong-perspective/mao-zedong-perspective.md) | 89 | 50 | 7120 B | [mini](mao-zedong-perspective/mao-zedong-perspective.mini.md) | 31 | 23 | 3443 B | [nano](mao-zedong-perspective/mao-zedong-perspective.nano.md) | 20 | 12 | 1110 B |
 | [Patterns of Enterprise Application Architecture](patterns-of-enterprise-application-architecture/) | [full](patterns-of-enterprise-application-architecture/patterns-of-enterprise-application-architecture.md) | 404 | 196 | 15501 B | [mini](patterns-of-enterprise-application-architecture/patterns-of-enterprise-application-architecture.mini.md) | 54 | 36 | 8099 B | [nano](patterns-of-enterprise-application-architecture/patterns-of-enterprise-application-architecture.nano.md) | 35 | 17 | 2823 B |
 | [Refactoring](refactoring/) | [full](refactoring/refactoring.md) | 433 | 242 | 17866 B | [mini](refactoring/refactoring.mini.md) | 49 | 31 | 5167 B | [nano](refactoring/refactoring.nano.md) | 37 | 19 | 1986 B |
 | [Release It!](release-it/) | [full](release-it/release-it.md) | 382 | 204 | 13542 B | [mini](release-it/release-it.mini.md) | 48 | 30 | 6372 B | [nano](release-it/release-it.nano.md) | 38 | 20 | 2205 B |
@@ -112,6 +113,12 @@ The book is a short, practical introduction to DDD. It focuses on subdomains, bo
 Author: [Vaughn Vernon](https://vaughnvernon.com/)
 
 The book shows how to apply DDD in real systems: aggregates, domain events, contexts, integrations, and application architecture. This rule set is more implementation-focused than `domain-driven-design-distilled`.
+
+### [Mao Zedong Perspective](mao-zedong-perspective/)
+
+Source: Selected Works of Mao Zedong
+
+This rule set distills strategic and analytical frameworks from the Selected Works: contradiction analysis, investigation-based practice, protracted strategy, periphery-to-center growth, united front, mass line, and dialectical confidence. It is useful for problem analysis, strategy under constraint, competitive positioning, and organizational decision-making.
 
 ### [Patterns of Enterprise Application Architecture](https://www.goodreads.com/en/book/show/70156.Patterns_of_Enterprise_Application_Architecture)
 
